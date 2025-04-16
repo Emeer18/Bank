@@ -31,4 +31,17 @@ public class Menus {
         System.out.println(sb.toString());
     }
 
+    public void settingsMenu() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Settings\n");
+        sb.append("1 - Change Password\n");
+        sb.append("2 - Change Username\n");
+        sb.append("3 - Delete Account\n");
+        sb.append("4 - Exit Settings\n");
+
+        System.out.println(sb.toString());
+    }
+
 }

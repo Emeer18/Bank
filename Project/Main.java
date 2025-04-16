@@ -2,12 +2,8 @@ package Project;
 
 import java.util.Scanner;
 import Entities.Menus;
-import Entities.Account; 
+import Entities.Account;
 import Entities.BankSystem;
-import java.util.ArrayList; 
-import java.util.List;
-import Enums.STATUS; 
-
 
 public class Main {
     public static void main(String[] args) {
@@ -16,91 +12,119 @@ public class Main {
         Menus menu = new Menus();
         BankSystem bankSystem = new BankSystem();
         Account account = new Account();
-        int option = 0;
+        int menuOption = 0;
 
         do {
             menu.initialMenu();
-            option = sc.nextInt();
+            menuOption = sc.nextInt();
             sc.nextLine();
 
-            if (option == 1) {
-                System.out.println("Enter your name:");
-                String name = sc.nextLine();
-                System.out.println("Enter your email:");
-                String email = sc.nextLine();
-                System.out.println("Enter your phone number:");
-                String phoneNumber = sc.nextLine();
-                System.out.println("Enter your CPF:");
-                String cpf = sc.nextLine();
-                System.out.println("Enter your balance:");
-                double balance = sc.nextDouble();
-                sc.nextLine();
-                System.out.println("Enter your username:");
-                String user = sc.nextLine();
-                System.out.println("Enter your password:");
-                String password = sc.nextLine();
-                System.out.println("Account created successfully!");
-
-                Account newAccount = new Account(name, email, phoneNumber, cpf, balance, user, password);
-                bankSystem.createAccount(newAccount);
+            if (menuOption == 1) {
+                account.createAccount(bankSystem);
             }
 
-            if (option == 2) {
+            if (menuOption == 2) {
+
+                int option = 0;
+                int idAccess = 0;
+                boolean found = false;
 
                 System.out.println("Enter your username:");
                 String user = sc.nextLine();
                 System.out.println("Enter your password:");
                 String password = sc.nextLine();
 
-                boolean found = false;
                 for (Account accounts : bankSystem.getAccounts()) {
                     if (accounts.getUser().equals(user) && accounts.getPassword().equals(password)) {
                         System.out.println("Login successful!");
                         found = true;
-                        int idAccess = accounts.getId();
-
-                        menu.accountMenu(user);
-                    option = sc.nextInt();
-
-                    switch (option) {
-                        case 1:
-                            System.out.println("Enter amount to deposit:");
-                            double amount = sc.nextDouble();
-                            bankSystem.deposit(idAccess, amount);
-                            sc.nextLine();
-                            break;
-                        case 2:
-                            
-                            break;
-                        case 3:
-                            
-                            break;
-                        case 4:
-
-                            break;
-                        case 5:
-                            System.out.println("Settings");
-                            break;
-                        case 6:
-                            break;
-                        default:
-                            break;
-                        }
+                        idAccess = accounts.getId();
                     }
                 }
-                    
-                if (found == false) {
+
+                if (found == true) {
+                    do {
+                        menu.accountMenu(user);
+                        option = sc.nextInt();
+
+                        switch (option) {
+                            case 1:
+                                System.out.println("Enter amount to deposit:");
+                                double amount = sc.nextDouble();
+                                bankSystem.deposit(idAccess, amount);
+                                sc.nextLine();
+                                break;
+                            case 2:
+                                System.out.println("Enter amount to withdraw:");
+                                amount = sc.nextDouble();
+                                bankSystem.withdraw(amount, idAccess);
+                                sc.nextLine();
+                                break;
+                            case 3:
+                                System.out.println("Enter amount to transfer:");
+                                amount = sc.nextDouble();
+                                System.out.println("Enter the ID of the account to transfer to:");
+                                int idTransfer = sc.nextInt();
+                                bankSystem.transfer(idAccess, amount, idTransfer);
+                                sc.nextLine();
+                                break;
+                            case 4:
+                                bankSystem.checkBalance(idAccess);
+                                System.out.println("Do you want to perform a new operation?\n1 - Yes\n6 - For exit to account.");
+                                option = sc.nextInt();
+                                sc.nextLine();
+                                if (option == 1) {
+                                    break;
+                                } else if (option == 6) {
+                                    System.out.println("Exiting account...");
+                                    break;
+                                } else {
+                                    System.out.println("Invalid option.");
+                                }
+                                break;
+                            case 5:
+                                menu.settingsMenu();
+                                int settingsOption = sc.nextInt();
+                                sc.nextLine();
+                                switch (settingsOption) {
+                                    case 1:
+                                        bankSystem.changePassword(idAccess, sc);
+                                        break;
+                                    case 2:
+                                        bankSystem.changeUsername(idAccess, sc);
+                                        break;
+                                    case 3:
+                                        bankSystem.deleteAccount(idAccess, sc);
+                                        System.out.println("Account deleted successfully.");
+                                        option = 6;
+                                        break;
+                                    case 4:
+                                        break;
+                                    default:
+                                        System.out.println("Invalid option.");
+                                }
+                                break;
+                            case 6:
+                                System.out.println("Exiting account...");
+                                break;
+                            default:
+                                break;
+                        }
+                    } while (option != 6);
+                } else {
                     System.out.println("Invalid username or password.");
                 }
             }
 
-        } while (option != 17);
+            if (menuOption != 1 && menuOption != 2 && menuOption != 3) {
+                System.out.println("Invalid option. Please try again.");
+            }
+
+        } while (menuOption != 3);
 
         for (Account accounts : bankSystem.getAccounts()) {
-            
             System.out.println(accounts.toString());
         }
         sc.close();
     }
 }
-    

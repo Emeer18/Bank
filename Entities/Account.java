@@ -1,5 +1,7 @@
 package Entities;
 
+import java.util.Scanner;
+
 public class Account {
 
     private String name;
@@ -15,13 +17,13 @@ public class Account {
     }
 
     public Account(String name, String email, String phoneNumber, String cpf, double balance, String user, String password) {
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.cpf = cpf;
-        this.balance = balance;
-        this.user = user;
-        this.password = password;
+        setName(name);
+        setEmail(email);
+        setPhoneNumber(phoneNumber);
+        setCpf(cpf);
+        setBalance(balance);
+        setUser(user);
+        setPassword(password);
     }
     
     public String getName() {
@@ -88,13 +90,29 @@ public class Account {
         this.password = password;
     }
 
-    public void withdraw(double amount) {
-        if (amount > 0 && amount <= balance) {
-            balance -= amount;
-        }
+    public void createAccount(BankSystem bankSystem) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter your name:");
+        String name = sc.nextLine();
+        System.out.println("Enter your email:");
+        String email = sc.nextLine();
+        System.out.println("Enter your phone number:");
+        String phoneNumber = sc.nextLine();
+        System.out.println("Enter your CPF:");
+        String cpf = sc.nextLine();
+        System.out.println("Enter your balance:");
+        double balance = sc.nextDouble();
+        sc.nextLine();
+        System.out.println("Enter your username:");
+        String user = sc.nextLine();
+        System.out.println("Enter your password:");
+        String password = sc.nextLine();
+        System.out.println("Account created successfully!");        
+
+        Account newAccount = new Account(name, email, phoneNumber, cpf, balance, user, password);
+        bankSystem.addAccount(newAccount);
     }
     
-
     @Override
     public String toString() {
         
@@ -111,4 +129,6 @@ public class Account {
 
         return sb.toString();
     }
+
+
 }
