@@ -3,11 +3,16 @@ package Entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class BankSystem {
 
+    public DateTimeFormatter frmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    public String action;
     List<Account> accounts = new ArrayList<>();
     Account accountMethods = new Account();
+    List<Logs> logs = new ArrayList<>();
 
     public BankSystem() {
     }
@@ -36,6 +41,14 @@ public class BankSystem {
         }
     }
 
+    public void addLogs(Logs log) {
+        logs.add(log);
+    }
+
+    public List<Logs> getLogs() {
+        return logs;
+    }
+
     public List<Account> getAccounts() {
         return accounts;
     }
@@ -55,6 +68,10 @@ public class BankSystem {
         if (amount > 0) {
                 account.setBalance(account.getBalance() + amount);
                 System.out.println("Deposit successful!");
+                LocalDateTime formattedDate = LocalDateTime.now();
+                action = "Deposit";
+                Logs newLog = new Logs(account.getUser(),action, frmt.format(formattedDate)); 
+                addLogs(newLog);
         } else {
             System.out.println("Invalid deposit amount.");
         }
@@ -66,6 +83,11 @@ public class BankSystem {
         if (account != null) {
             if (amount > 0 && amount <= account.getBalance()) {
                 account.setBalance(account.getBalance() - amount);
+                System.out.println("Withdrawal successful!");
+                LocalDateTime formattedDate = LocalDateTime.now();
+                action = "Withdrawal";
+                Logs newLog = new Logs(account.getUser(),action, frmt.format(formattedDate)); 
+                addLogs(newLog);
             }
         }
 
@@ -79,22 +101,26 @@ public class BankSystem {
         Account account = searchIdAccount(idAccess);
         Account accountTransfer = searchIdAccount(idTransfer);
 
-        if (accountTransfer == null) {
-            System.out.println("Account not found.");
-            return;
-        }
-
         if (account != null) {
+
+            if (accountTransfer == null) {
+                System.out.println("Account not found.");
+                return;
+            }
 
             if (amount > 0 && amount <= account.getBalance()) {
                 account.setBalance(account.getBalance() - amount);
                 accountTransfer.setBalance(accountTransfer.getBalance() + amount);
+                System.out.println("Transfer successful!");
+                action = "Transfer";
+                LocalDateTime formattedDate = LocalDateTime.now();
+                Logs newLog = new Logs(account.getUser(),action, frmt.format(formattedDate)); 
+                addLogs(newLog);
             }
 
         } else {
             System.out.println("Account not found.");
         }
-
     }
 
     public void checkBalance(int idAccess) {
@@ -116,6 +142,10 @@ public class BankSystem {
                 String newPassword = sc.nextLine();
                 account.setPassword(newPassword);
                 System.out.println("Password changed successfully!");
+                action = "Password changed";
+                LocalDateTime formattedDate = LocalDateTime.now();
+                Logs newLog = new Logs(account.getUser(),action, frmt.format(formattedDate)); 
+                addLogs(newLog);
                 return;
             }
             else{
@@ -135,6 +165,10 @@ public class BankSystem {
                 String newUsername = sc.nextLine();
                 account.setUser(newUsername);
                 System.out.println("Username changed successfully!");
+                action = "Username changed";
+                LocalDateTime formattedDate = LocalDateTime.now();
+                Logs newLog = new Logs(account.getUser(),action, frmt.format(formattedDate)); 
+                addLogs(newLog);
                 return;
             }
             else{

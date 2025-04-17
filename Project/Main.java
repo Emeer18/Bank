@@ -4,6 +4,7 @@ import java.util.Scanner;
 import Entities.Menus;
 import Entities.Account;
 import Entities.BankSystem;
+import Entities.Logs;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,6 +20,7 @@ public class Main {
             menuOption = sc.nextInt();
             sc.nextLine();
 
+
             if (menuOption == 1) {
                 account.createAccount(bankSystem);
             }
@@ -28,6 +30,7 @@ public class Main {
                 int option = 0;
                 int idAccess = 0;
                 boolean found = false;
+                String action = "";
 
                 System.out.println("Enter your username:");
                 String user = sc.nextLine();
@@ -102,13 +105,23 @@ public class Main {
                                         break;
                                     default:
                                         System.out.println("Invalid option.");
-                                }
-                                break;
+                                        break;
+                                }       
                             case 6:
                                 System.out.println("Exiting account...");
                                 break;
+                            
                             default:
                                 break;
+
+                            case 7:
+                                System.out.println("Logs:");
+                                for (Logs logs : bankSystem.getLogs()) {
+                                    if (logs.getUser().equals(user)) {
+                                        logs.displayLog();
+                                    }
+                                }
+                            
                         }
                     } while (option != 6);
                 } else {

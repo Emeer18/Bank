@@ -27,6 +27,7 @@ public class Menus {
         sb.append("4 - Check Balance\n");
         sb.append("5 - Settings\n");
         sb.append("6 - Exit Account\n");
+        sb.append("7 - View Logs\n");
 
         System.out.println(sb.toString());
     }
